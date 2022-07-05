@@ -5,7 +5,7 @@
 
 <div align="center">
   <a>
-    <img src="https://pbs.twimg.com/profile_images/1398876828295643146/I9HgKjhJ_400x400.jpg" alt="Logo" width="80" height="80">
+    <img src="https://github.com/Zenotta/Keycard/blob/main/assets/title.png" alt="Logo" width="80" height="80">
   </a>
 </div>
 
@@ -51,27 +51,26 @@ axios
   });
 ```
 
-<details>
-  <summary>Response Content</summary>
-  <br/>
+<b>Example Response Content</b>
+
 ```json
     {
-        "status": 'success',
-        "reason": 'OK',
+        "status": "success",
+        "reason": "OK",
         "content": {
+            "toAddress: "b46f37...3bfb01",
             "receiptAsset": {
                 "amount": 1000,
                 "drs_tx_hash": "YOUR_TX_HASH"
-            },
-            "toAddress: "b46f37...3bfb01"
+            }
         }
     }
 ```
-    <br/>
+<br/>
 
-    * `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
-    * `toAddress` - Your address where the `Receipt` assets were sent to 
-</details>
+* `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
+* `toAddress` - Your address where the `Receipt` assets were sent to 
+
 
 <br />
 
@@ -101,18 +100,15 @@ axios
   });
 ```
 
-<details>
-  <summary>Response Content</summary>
-  <br/>
-```
+<b>Example Response Content</b>
+
+```json
     {
-        "status": 'success',
-        "reason": 'OK',
+        "status": "success",
+        "reason": "OK",
         "content": null
     }
 ```
-    <br/>
-</details>
 
 <br />
 
