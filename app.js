@@ -6,6 +6,7 @@ const logger = require('morgan');
 
 const passPhrase = process.argv[2];
 
+
 // ======= Local Imports ======= //
 
 const db = require('./src/db');
@@ -31,7 +32,6 @@ internalLogger.banner();
 
 Promise.resolve(db.init());
 app.locals.db = db.redisClient;
-utils.getAllKeypairs(app.locals.db).then(resp => console.log(resp));
 
 
 // ======= Blockchain ======= //
@@ -46,9 +46,6 @@ if (mKeyResponse.status != 'success') {
 
   process.exit(1);
 }
-
-let keypair = blockchain.getNewKeypairEncrypted(app.locals.blInstance.client);
-console.log('keypair', keypair);
 
 db.setDb(db.redisClient, 'mkey', app.locals.blInstance.client.getMasterKey().content.getMasterKeyResponse);
 
@@ -76,5 +73,18 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json(utils.errorResponse(err.status || 500, "Couldn't connect to requested route"));
 });
+
+
+// Handle runtime exceptions
+process.on('uncaughtException', (e) => {
+  internalLogger.logHeaderError('unhandledException', e.message);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (e) => {
+  internalLogger.logHeaderError('unhandledRejection', e);
+  process.exit(1);
+});
+
 
 module.exports = app;

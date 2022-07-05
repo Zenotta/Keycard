@@ -3,6 +3,7 @@ const router = express.Router();
 const utils = require('./utils');
 const blockchain = require('./blockchain');
 const db = require('./db');
+const logger = require('./logger');
 
 /* GET home page. */
 router.get('/', (_req, res, _next) => {
@@ -40,10 +41,11 @@ router.post('/send_blockchain_item', async (req, res, _next) => {
   const sendReceiptResp = await client.makeReceiptPayment(address, amount, txHash, allKeypairs, excessKeypair);
 
   if (sendReceiptResp.status == 'Success') {
+    db.setDb(db.redisClient, excessKeypair, excessKeypair);
     res.send(utils.constructResponse(200, 'OK', { message: 'Payment sent' }));
   }
 
-  db.setDb(db.redisClient, excessKeypair, excessKeypair);
+  logger.logHeaderError('Error Sending Blockchain Item', sendReceiptResp);
   res.send(utils.errorResponse(500, "Couldn't send payment"));
 });
 

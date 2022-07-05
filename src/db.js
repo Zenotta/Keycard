@@ -14,8 +14,9 @@ const init = async () => {
         });
 
         redisClient.on('error', (error) => {
-            logger.error(`Redis error: ${error}`);
+            logger.logHeaderError('Redis Connection', error);
             reject(error);
+            process.exit(1);
         });
         redisClient.connect();
     });

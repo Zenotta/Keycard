@@ -120,6 +120,13 @@ We will soon be creating a set of guidelines for any and all contributions, so s
 
 <br />
 
+# ✅ Todo List
+
+- [ ] Add Docker compose setup
+- [ ] Add unit tests for functionality
+- [ ] Add security for calls to internal key handling
+- [ ] Add translations for README
+
 # 🏛 License
 
 Keycard is licensed under the MIT License.

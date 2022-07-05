@@ -32,11 +32,11 @@ function createZenottaInstance(computeHost, intercomHost, passPhrase, seedPhrase
 /**
  * Generates a new encrypted keypair from the passed client
  * 
- * @param {*} client 
+ * @param {*} client
  * @returns 
  */
 function getNewKeypairEncrypted(client) {
-    const keypairResp = client.getNewKeypair();
+    const keypairResp = client.getNewKeypair([]);
 
     if (keypairResp && keypairResp.status == 'success') {
         return keypairResp.content.newKeypairResponse;

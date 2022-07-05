@@ -1,19 +1,24 @@
 const chalk = require('chalk');
+const utils = require('./utils');
 
 const error = chalk.bold.red;
 const warning = chalk.hex('#FFA500');
 const success = chalk.hex('#00FF00');
 
 function logHeaderInfo(heading, message) {
+    const date = new Date();
+    
     console.log();
-    console.log(chalk.bold.underline.blue(heading));
+    console.log(chalk.bold.underline.blue(`${utils.getTimestamp()} :: ${heading}`));
     console.log(message);
     console.log();
 }
 
 function logHeaderError(heading, message) {
+    const date = new Date();
+    
     console.log();
-    console.log(chalk.bold.underline.red(heading));
+    console.log(chalk.bold.underline.red(`${utils.getTimestamp()} :: ${heading}`));
     console.log(message);
     console.log();
 }
