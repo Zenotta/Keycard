@@ -5,7 +5,7 @@
 
 <div align="center">
   <a>
-    <img src="https://github.com/Zenotta/Keycard/blob/main/assets/title.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/Zenotta/Keycard/blob/main/assets/title.png" alt="Logo">
   </a>
 </div>
 
@@ -53,18 +53,18 @@ axios
 
 <b>Example Response Content</b>
 
-```json
-    {
-        "status": "success",
-        "reason": "OK",
-        "content": {
-            "toAddress: "b46f37...3bfb01",
-            "receiptAsset": {
-                "amount": 1000,
-                "drs_tx_hash": "YOUR_TX_HASH"
-            }
+```
+{
+    "status": "success",
+    "reason": "OK",
+    "content": {
+        "toAddress: "b46f37...3bfb01",
+        "receiptAsset": {
+            "amount": 1000,
+            "drs_tx_hash": "YOUR_TX_HASH"
         }
     }
+}
 ```
 <br/>
 
@@ -91,7 +91,7 @@ With these 3 values you can make a call to Keycard at:
 // POST
 axios
   .post("/send_blockchain_item", {
-    amount: 1000,               // Number of items to create
+    amount: 1000,               // Number of items to send
     address: "046b37...3bfb09"  // Player address
     txHash: "YOUR_TX_HASH"      // The blockchain item's `drs_tx_hash`
   })
@@ -103,11 +103,11 @@ axios
 <b>Example Response Content</b>
 
 ```json
-    {
-        "status": "success",
-        "reason": "OK",
-        "content": null
-    }
+{
+    "status": "success",
+    "reason": "OK",
+    "content": null
+}
 ```
 
 <br />
