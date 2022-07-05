@@ -122,4 +122,4 @@ We will soon be creating a set of guidelines for any and all contributions, so s
 
 # 🏛 License
 
-Chi is licensed under the MIT License.
+Keycard is licensed under the MIT License.
