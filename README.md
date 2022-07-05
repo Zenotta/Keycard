@@ -34,8 +34,6 @@ npm start
 
 Keycard currently only provides 2 routes for handling blockchain asset creation and sending.
 
-<br />
-
 ### Creating Blockchain Items
 
 Zenotta uses `Receipt` assets to provide NFT-like ownership, and you can think of `Receipts` in 
@@ -56,7 +54,7 @@ axios
 <details>
   <summary>Response Content</summary>
   <br/>
-    ```json
+```json
     {
         "status": 'success',
         "reason": 'OK',
@@ -68,12 +66,14 @@ axios
             "toAddress: "b46f37...3bfb01"
         }
     }
-    ```
+```
     <br/>
 
     * `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
     * `toAddress` - Your address where the `Receipt` assets were sent to 
 </details>
+
+<br />
 
 ### Sending Blockchain Items to Players
 
@@ -104,21 +104,25 @@ axios
 <details>
   <summary>Response Content</summary>
   <br/>
-    ```json
+```
     {
         "status": 'success',
         "reason": 'OK',
         "content": null
     }
-    ```
+```
     <br/>
 </details>
+
+<br />
 
 # 🤝 Contributing
 
 Keycard is still at an early stage of development and we welcome all contributions. You can submit any ideas or concerns as pull requests or as GitHub issues.
 
 We will soon be creating a set of guidelines for any and all contributions, so stay tuned!
+
+<br />
 
 # 🏛 License
 
