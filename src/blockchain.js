@@ -1,5 +1,5 @@
 const zenotta = require('@zenotta/zenotta-js');
-
+const logger = require('./logger');
 
 /**
  * Creates an instance of the Zenotta handler for blockchain integration
@@ -11,7 +11,7 @@ const zenotta = require('@zenotta/zenotta-js');
  * @returns 
  */
 function createZenottaInstance(computeHost, intercomHost, passPhrase, seedPhrase) {
-    const seedPhrase = seedPhrase || zenotta.generateSeedPhrase();
+    seedPhrase = seedPhrase || zenotta.generateSeedPhrase();
     const client = new zenotta.ZenottaInstance();
 
     const initResult = client.initFromSeed({
@@ -41,7 +41,8 @@ function getNewKeypairEncrypted(client) {
     if (keypairResp && keypairResp.status == 'success') {
         return keypairResp.content.newKeypairResponse;
     }
-    
+
+    logger.logHeaderError('Error Getting New Keypair', keypairResp);
     return null;
 }
 

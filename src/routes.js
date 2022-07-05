@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const utils = require('../utils');
-const blockchain = require('../blockchain');
+const utils = require('./utils');
+const blockchain = require('./blockchain');
+const db = require('./db');
 
 /* GET home page. */
 router.get('/', (_req, res, _next) => {
@@ -17,10 +18,11 @@ router.post('/create_blockchain_item', async (req, res, _next) => {
   
   const keypair = blockchain.getNewKeypairEncrypted(client);
   if (!keypair) { res.send(utils.errorResponse(500, "Couldn't generate keypair")) }
-
+  
   const createReceiptResp = await client.createReceipts(keypair, true, amount);
   const receiptInfo = blockchain.handleCreateReceiptResp(createReceiptResp);
-
+  
+  db.setDb(db.redisClient, receiptInfo.toAddress, keypair);
   res.send(utils.constructResponse(200, 'OK', receiptInfo));
 });
 
@@ -34,13 +36,14 @@ router.post('/send_blockchain_item', async (req, res, _next) => {
   const excessKeypair = blockchain.getNewKeypairEncrypted(client);
   if (!excessKeypair) { res.send(utils.errorResponse(500, "Couldn't generate excess keypair")) }
 
-  const allKeypairs = utils.getAllKeypairs();
+  const allKeypairs = utils.getAllKeypairs(req.app.locals.db);
   const sendReceiptResp = await client.makeReceiptPayment(address, amount, txHash, allKeypairs, excessKeypair);
 
   if (sendReceiptResp.status == 'Success') {
     res.send(utils.constructResponse(200, 'OK', { message: 'Payment sent' }));
   }
 
+  db.setDb(db.redisClient, excessKeypair, excessKeypair);
   res.send(utils.errorResponse(500, "Couldn't send payment"));
 });
 

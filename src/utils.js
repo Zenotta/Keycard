@@ -30,9 +30,9 @@ function errorResponse(status, message) {
  * 
  * @returns 
  */
-function getAllKeypairs() {
-    console.error("getAllKeypairs not yet implemented!");
-    return [];
+async function getAllKeypairs(redisClient) {
+    let keypairs = await redisClient.keys("*");
+    return keypairs.filter(e => e != 'mkey');
 }
 
 module.exports = {

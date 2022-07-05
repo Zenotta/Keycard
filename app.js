@@ -6,12 +6,14 @@ const logger = require('morgan');
 
 const passPhrase = process.argv[2];
 
-// Local imports
-const utils = require('./utils');
+// ======= Local Imports ======= //
+
+const db = require('./src/db');
+const utils = require('./src/utils');
 const config = require('./config');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const blockchain = require('./blockchain');
+const indexRouter = require('./src/routes');
+const blockchain = require('./src/blockchain');
+const internalLogger = require('./src/logger');
 
 const app = express();
 
@@ -21,18 +23,47 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Blockchain
-app.locals.blInstance = blockchain.createZenottaInstance(config.computeHost, config.intercomHost, passPhrase);
+internalLogger.banner();
 
-// Routes
+
+
+// ======= DB Setup ======= //
+
+Promise.resolve(db.init());
+app.locals.db = db.redisClient;
+utils.getAllKeypairs(app.locals.db).then(resp => console.log(resp));
+
+
+// ======= Blockchain ======= //
+
+app.locals.blInstance = blockchain.createZenottaInstance(config.computeHost, config.intercomHost, passPhrase);
+const mKeyResponse = app.locals.blInstance.client.getMasterKey();
+
+if (mKeyResponse.status != 'success') {
+  console.log(mKeyResponse);
+  console.log("Exiting with error...");
+  console.log("");
+
+  process.exit(1);
+}
+
+let keypair = blockchain.getNewKeypairEncrypted(app.locals.blInstance.client);
+console.log('keypair', keypair);
+
+db.setDb(db.redisClient, 'mkey', app.locals.blInstance.client.getMasterKey().content.getMasterKeyResponse);
+
+
+// ======= Routes ======= //
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 
 // ======= Catch 404 and Forward to Error Handler ======= //
 
 app.use(function (_req, _res, next) {
   next(createError(404));
 });
+
 
 // ======= Error Handler ======= //
 
