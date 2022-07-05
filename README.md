@@ -112,7 +112,7 @@ axios
 
 <br />
 
-# 🤝 Contributing
+## 🤝 Contributing
 
 Keycard is still at an early stage of development and we welcome all contributions. You can submit any ideas or concerns as pull requests or as GitHub issues.
 
@@ -120,13 +120,13 @@ We will soon be creating a set of guidelines for any and all contributions, so s
 
 <br />
 
-# ✅ Todo List
+## ✅ Todo List
 
 - [ ] Add Docker compose setup
 - [ ] Add unit tests for functionality
 - [ ] Add security for calls to internal key handling
 - [ ] Add translations for README
 
-# 🏛 License
+## 🏛 License
 
 Keycard is licensed under the MIT License.
