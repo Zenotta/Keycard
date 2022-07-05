@@ -53,12 +53,12 @@ axios
 
 <b>Example Response Content</b>
 
-```
+```json
 {
     "status": "success",
     "reason": "OK",
     "content": {
-        "toAddress: "b46f37...3bfb01",
+        "toAddress": "b46f37...3bfb01",
         "receiptAsset": {
             "amount": 1000,
             "drs_tx_hash": "YOUR_TX_HASH"
@@ -68,8 +68,8 @@ axios
 ```
 <br/>
 
-* `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
 * `toAddress` - Your address where the `Receipt` assets were sent to 
+* `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
 
 
 <br />
