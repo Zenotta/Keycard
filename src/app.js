@@ -9,13 +9,13 @@ const passPhrase = process.argv[2];
 
 // ======= Local Imports ======= //
 
-const db = require('./src/db');
-const utils = require('./src/utils');
-const config = require('./config');
-const cache = require('./src/cache');
-const indexRouter = require('./src/routes');
-const blockchain = require('./src/blockchain');
-const internalLogger = require('./src/logger');
+const db = require('./db');
+const utils = require('./utils');
+const config = require('../config');
+const cache = require('./cache');
+const indexRouter = require('./routes');
+const blockchain = require('./blockchain');
+const internalLogger = require('./logger');
 const chalk = require('chalk');
 
 const app = express();

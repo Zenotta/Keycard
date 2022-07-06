@@ -1,0 +1,45 @@
+version: '3'
+services:
+    cache:
+        image: redis:6.2.6-alpine
+        restart: always
+        expose:
+            - 6379
+        command: redis-server --save 20 1 --loglevel warning
+        volumes:
+            - cache:/data
+        container_name: redis-cache
+    intercom:
+        build: .
+        image: intercom
+        ports:
+            - '3002:3002'
+        expose:
+            - 3002
+        depends_on:
+            - cache
+        environment:
+            # Develop or Production
+            - NODE_ENV=production
+            # Log Level
+            - LOG_LEVEL=warn
+            # Request body size limit (as a string)
+            - BODY_LIMIT=2kb
+            # Request window in minutes
+            - REQUEST_WINDOW=15
+            # Number of days for a Redis key entry to expire
+            - KEY_LIFETIME=5
+            # Maximum number of tries on get_data route for an IP address within the request window
+            - GET_RATE_LIMIT=150
+            # Maximum number of tries on set_data route for an IP address within the request window
+            - SET_RATE_LIMIT=150
+            # Maximum number of tries on del_data route for an IP address within the request window
+            - DEL_RATE_LIMIT=150
+            # Redis URL
+            - REDIS_URL=redis://cache:6379
+            # Server Port
+            - SERVER_PORT=3002
+        container_name: intercom-server
+volumes:
+    cache:
+        driver: local

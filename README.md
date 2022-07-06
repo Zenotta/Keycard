@@ -37,8 +37,8 @@ Keycard currently only provides 2 routes for handling blockchain asset creation 
 ### Creating Blockchain Items
 
 Zenotta uses `Receipt` assets to provide NFT-like ownership, and you can think of `Receipts` in 
-Zenotta as the same thing as blockchain items/NFTs. These can be created by making a
-call to `create_blockchain_item` as below:
+Zenotta exactly like blockchain items/NFTs. These can be created by making a call to `create_blockchain_item` 
+as below:
 
 ```typescript
 // POST
@@ -71,7 +71,6 @@ axios
 * `toAddress` - Your address where the `Receipt` assets were sent to 
 * `receiptAsset` - Details of the `Receipt` asset created. The `drs_tx_hash` can be used to spend this item later
 
-
 <br />
 
 ### Sending Blockchain Items to Players
@@ -93,7 +92,7 @@ axios
   .post("/send_blockchain_item", {
     amount: 1000,               // Number of items to send
     address: "046b37...3bfb09"  // Player address
-    txHash: "YOUR_TX_HASH"      // The blockchain item's `drs_tx_hash`
+    txHash: "YOUR_TX_HASH"      // The blockchain item's `drs_tx_hash` identifier
   })
   .then((response) => {
     console.log(response);
