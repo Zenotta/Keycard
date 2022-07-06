@@ -9,13 +9,13 @@ services:
         volumes:
             - cache:/data
         container_name: redis-cache
-    intercom:
+    keycard:
         build: .
-        image: intercom
+        image: keycard
         ports:
-            - '3002:3002'
+            - '3000:3000'
         expose:
-            - 3002
+            - 3000
         depends_on:
             - cache
         environment:
@@ -38,8 +38,8 @@ services:
             # Redis URL
             - REDIS_URL=redis://cache:6379
             # Server Port
-            - SERVER_PORT=3002
-        container_name: intercom-server
+            - SERVER_PORT=3000
+        container_name: keycard-server
 volumes:
     cache:
         driver: local
