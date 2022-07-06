@@ -13,9 +13,9 @@ services:
         build: .
         image: keycard
         ports:
-            - '3000:3000'
+            - '1337:1337'
         expose:
-            - 3000
+            - 1337
         depends_on:
             - cache
         environment:
@@ -38,7 +38,7 @@ services:
             # Redis URL
             - REDIS_URL=redis://cache:6379
             # Server Port
-            - SERVER_PORT=3000
+            - PORT=1337
         container_name: keycard-server
 volumes:
     cache:

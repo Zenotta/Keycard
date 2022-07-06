@@ -18,15 +18,48 @@ A small service that takes care of all your Zenotta blockchain integration, so y
 
 <!-- GETTING STARTED -->
 
-## 📦 Getting Started
+## 📚 Requirements
 
-Keycard assumes an existing NodeJS installation (v16.14.2 tested) as well as associated npm, with which
-you can install and then run the service
+In order to run Keycard, you'll need to have Docker installed (minimum tested v20.10.12) and be comfortable working with the command line. If you'd like to develop on this repo, you'll have the following additional requirements:
 
-```
+- NodeJs (tested at v16.14.2)
+- Yarn (tested at v1.22.10)
+
+<br />
+
+## 📦 Installation
+
+With Docker installed and running, you can clone this repo and get everything installed with the following:
+
+```sh
+# SSH clone
+git clone git@github.com:Zenotta/Keycard.git
+
+# Navigate to the repo
+cd keycard
+
+# Install dependencies
 npm install
-npm start
+
+# Bundle server
+npm run build
+
+# Build Docker image
+docker build -t keycard .
 ```
+
+<br />
+
+## 🏎️ Running
+
+To use Keycard as is, you can simply run the following in the root folder of the repo:
+
+```sh
+docker-compose up -d
+```
+
+Docker will orchestrate the required containers, after which you can make 
+calls to Keycard at port **1337**. Data saved to Keycard's Redis instance is kept within a Docker volume.
 
 <br />
 
