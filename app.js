@@ -12,9 +12,11 @@ const passPhrase = process.argv[2];
 const db = require('./src/db');
 const utils = require('./src/utils');
 const config = require('./config');
+const cache = require('./src/cache');
 const indexRouter = require('./src/routes');
 const blockchain = require('./src/blockchain');
 const internalLogger = require('./src/logger');
+const chalk = require('chalk');
 
 const app = express();
 
@@ -36,18 +38,33 @@ app.locals.db = db.redisClient;
 
 // ======= Blockchain ======= //
 
-app.locals.blInstance = blockchain.createZenottaInstance(config.computeHost, config.intercomHost, passPhrase);
-const mKeyResponse = app.locals.blInstance.client.getMasterKey();
+db.getDb(db.redisClient, 'mkey')
+  .then(async (mkey) => {
+    // If we don't have an existing key
+    if (!mkey) {
+      console.log(chalk.yellow('No mkey found in db. Generating new blockchain instance'));
+      return await blockchain.generateNewZenottaInstance(config.computeHost, config.intercomHost, passPhrase, db.redisClient);
 
-if (mKeyResponse.status != 'success') {
-  console.log(mKeyResponse);
-  console.log("Exiting with error...");
-  console.log("");
+    }
 
-  process.exit(1);
-}
+    mkey = JSON.parse(mkey);
+    console.log('Mkey found. Initialising blockchain instance');
+    return await blockchain.createZenottaInstance(config.computeHost, config.intercomHost, passPhrase, mkey);
+  })
+  .then(async (blInstance) => {
+    app.locals.blInstance = blInstance;
+    const blClient = app.locals.blInstance.client;
 
-db.setDb(db.redisClient, 'mkey', app.locals.blInstance.client.getMasterKey().content.getMasterKeyResponse);
+    return await cache.initBalanceCache(db.redisClient, blClient, config.cacheCapacity);
+  })
+  .then(cache => {
+
+    // ======= Cache ======= //
+
+    console.log(chalk.green('Balance cache initialised'));
+    app.locals.balanceCache = cache;
+  });
+
 
 
 // ======= Routes ======= //

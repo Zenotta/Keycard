@@ -30,30 +30,41 @@ function errorResponse(status, message) {
  * 
  * @returns 
  */
-async function getAllKeypairs(redisClient) {
+async function getAllAddresses(redisClient) {
     let keypairs = await redisClient.keys("*");
-    return keypairs.filter(e => e != 'mkey');
+    return keypairs.filter(e => isValidPaymentAddress(e));
+}
+
+/**
+ * Predicate to check whether payment address is valid
+ * 
+ * @param {string} address 
+ * @returns 
+ */
+function isValidPaymentAddress(address) {
+    const re = /^[0-9A-Fa-fx]{64}$/;
+    return address.match(re);
 }
 
 /**
  * Creates a human readable timestamp of the current time
  * @returns 
  */
-const getTimestamp = () => {
+function getTimestamp() {
     const a = new Date();
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
     ];
     const year = a.getFullYear();
     const month = months[a.getMonth()];
@@ -63,11 +74,12 @@ const getTimestamp = () => {
     const sec = a.getSeconds() < 10 ? `0${a.getSeconds()}` : a.getSeconds();
     const time = `${date} ${month} ${year} - ${hour}:${min}:${sec}`;
     return time;
-  };
+};
 
 module.exports = {
     constructResponse: constructResponse,
     errorResponse: errorResponse,
-    getAllKeypairs: getAllKeypairs,
-    getTimestamp: getTimestamp
+    getAllAddresses: getAllAddresses,
+    getTimestamp: getTimestamp,
+    isValidPaymentAddress: isValidPaymentAddress
 }

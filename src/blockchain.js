@@ -1,5 +1,32 @@
 const zenotta = require('@zenotta/zenotta-js');
 const logger = require('./logger');
+const db = require('./db');
+
+
+/**
+ * Generates a new Zenotta instance, without provided master key
+ * 
+ * @param {string} computeHost 
+ * @param {string} intercomHost 
+ * @param {string} passPhrase 
+ * @param {*} redisClient 
+ * @returns 
+ */
+async function generateNewZenottaInstance(computeHost, intercomHost, passPhrase, redisClient) {
+    const blInstance = await createZenottaInstance(computeHost, intercomHost, passPhrase);
+    const mKeyResponse = blInstance.client.getMasterKey();
+
+    if (mKeyResponse.status != 'success') {
+        console.log(mKeyResponse);
+        console.log("Exiting with error...");
+        console.log("");
+
+        process.exit(1);
+    }
+
+    db.setDb(redisClient, 'mkey', blInstance.client.getMasterKey().content.getMasterKeyResponse);
+    return blInstance;
+}
 
 /**
  * Creates an instance of the Zenotta handler for blockchain integration
@@ -7,26 +34,36 @@ const logger = require('./logger');
  * @param {string} computeHost - Hostname of the mempool node to use.
  * @param {string} intercomHost - Hostname of the intercom node to use.
  * @param {string} passPhrase - Passphrase to use to handle instance encryption
- * @param {string} seedPhrase - Seed phrase to start the instance with. If not provided, a new one will be generated.
+ * @param {string} masterKey - Master key to start the instance with. If not provided, a new one will be generated from seed phrase.
  * @returns 
  */
-function createZenottaInstance(computeHost, intercomHost, passPhrase, seedPhrase) {
-    seedPhrase = seedPhrase || zenotta.generateSeedPhrase();
+async function createZenottaInstance(computeHost, intercomHost, passPhrase, masterKey) {
     const client = new zenotta.ZenottaInstance();
+    let initResult = null;
 
-    const initResult = client.initFromSeed({
-        computeHost,
-        intercomHost,
-        passPhrase,
-    },
-        seedPhrase
-    );
+    if (!masterKey) {
+        seedPhrase = zenotta.generateSeedPhrase();
+        initResult = await client.initFromSeed({
+            computeHost,
+            intercomHost,
+            passPhrase,
+        },
+            seedPhrase
+        );
+    } else {
+        initResult = await client.initFromMasterKey({
+            computeHost,
+            intercomHost,
+            passPhrase,
+        },
+            masterKey
+        );
+    }
 
     return {
         client,
-        initResult,
-        seedPhrase
-    }
+        initResult
+    };
 }
 
 /**
@@ -55,8 +92,8 @@ function getNewKeypairEncrypted(client) {
 function handleCreateReceiptResp(createReceiptResp) {
     if (createReceiptResp) {
         return {
-            receiptAsset: createReceiptResp.content.asset.asset.Receipt,
-            toAddress: createReceiptResp.content.to_address
+            receiptAsset: createReceiptResp.content.createReceiptResponse.asset.asset.Receipt,
+            toAddress: createReceiptResp.content.createReceiptResponse.to_address
         }
     }
 
@@ -66,5 +103,6 @@ function handleCreateReceiptResp(createReceiptResp) {
 module.exports = {
     createZenottaInstance,
     getNewKeypairEncrypted,
-    handleCreateReceiptResp
+    handleCreateReceiptResp,
+    generateNewZenottaInstance
 }

@@ -127,6 +127,8 @@ We will soon be creating a set of guidelines for any and all contributions, so s
 - [ ] Add security for calls to internal key handling
 - [ ] Add translations for README
 
+<br />
+
 ## 🏛 License
 
-Keycard is licensed under the MIT License.
+Keycard is licensed under the [MIT License](https://github.com/Zenotta/Keycard/blob/main/LICENSE).

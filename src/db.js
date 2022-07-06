@@ -22,30 +22,32 @@ const init = async () => {
     });
 };
 
-const setDb = async (redisClient, address, keypair) => {
+const setDb = async (redisClient, key, value) => {
     await redisClient.set(
-        address,
-        JSON.stringify(keypair)
-    );
+        key,
+        JSON.stringify(value)
+    ).catch(error => {
+        console.log(logger.error('Setting to Db: Error.', error));
+    });
 
     console.log(logger.success(`Setting to Db: Ok`));
 };
 
-const getDb = async (redisClient, address) => {
-    const keypair = await redisClient.get(address);
+const getDb = async (redisClient, key) => {
+    const value = await redisClient.get(key);
 
-    if (!keypair) { 
+    if (!value) { 
         console.log(logger.error('Getting from Db: Error. No entry found')); 
         return null;
     }
 
     console.log(logger.success(`Getting from Db: Ok`));
-    return keypair;
+    return value;
 };
 
 module.exports = {
     init,
     setDb,
     getDb,
-    redisClient
+    redisClient,
 }
