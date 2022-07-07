@@ -51,10 +51,6 @@ docker build -t keycard .
 <br />
 
 ## 🏎️ Running
-
-<br />
-
-### Easy (Docker Compose)
 To use Keycard as is, you can simply run the following in the root folder of the repo:
 
 ```sh
@@ -64,7 +60,8 @@ docker-compose up -d
 Docker will orchestrate the required containers, after which you can make 
 calls to Keycard at port **1337**. Data saved to Keycard's Redis instance is kept within a Docker volume.
 
-### Hard (Manual)
+<br />
+
 If you don't want to use Docker you can run the service manually. For this you'll require [Redis](https://redis.io/download/)
 installed on whatever you want to run Keycard on.
 
@@ -209,7 +206,7 @@ We will soon be creating a set of guidelines for any and all contributions, so s
 
 ## ✅ Todo List
 
-- [ ] Add Docker compose setup
+- [x] Add Docker compose setup
 - [ ] Add unit tests for functionality
 - [ ] Add security for calls to internal key handling
 - [ ] Add translations for README
