@@ -46,6 +46,7 @@ async function createZenottaInstance(computeHost, intercomHost, passPhrase, mast
     if (!masterKey) {
         const seedPhrase = zenotta.generateSeedPhrase();
         console.log('seed phrase', seedPhrase);
+        console.log('seed phrase type', typeof seedPhrase);
         initResult = await client.initFromSeed({
             computeHost,
             intercomHost,
