@@ -39,6 +39,14 @@ services:
             - REDIS_URL=redis://cache:6379
             # Server Port
             - PORT=1337
+            # Passphrase
+            - PASSPHRASE=${PASSPHRASE}
+            # Compute Host
+            - COMPUTE_HOST=${COMPUTE_HOST}
+            # Intercom Host
+            - INTERCOM_HOST=${INTERCOM_HOST}
+            # Cache Capacity
+            - CACHE_CAPACITY=${CACHE_CAPACITY}
         container_name: keycard-server
 volumes:
     cache:

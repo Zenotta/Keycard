@@ -3,15 +3,17 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
-const passPhrase = process.argv[2];
-
+const passPhrase = process.env.PASSPHRASE ? process.env.PASSPHRASE.toString() : "";
+const intercomHost = process.env.INTERCOM_HOST ? process.env.INTERCOM_HOST.toString() : "http://0.0.0.0:3000";
+const computeHost = process.env.COMPUTE_HOST ? process.env.COMPUTE_HOST.toString() : "http://34.209.131.212:3001";
+const cacheCapacity = process.env.CACHE_CAPACITY ? parseInt(process.env.CACHE_CAPACITY) : 1000;
 
 // ======= Local Imports ======= //
 
 const db = require('./db');
 const utils = require('./utils');
-const config = require('../config');
 const cache = require('./cache');
 const indexRouter = require('./routes');
 const blockchain = require('./blockchain');
@@ -20,6 +22,7 @@ const chalk = require('chalk');
 
 const app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,19 +46,19 @@ db.getDb(db.redisClient, 'mkey')
     // If we don't have an existing key
     if (!mkey) {
       console.log(chalk.yellow('No mkey found in db. Generating new blockchain instance'));
-      return await blockchain.generateNewZenottaInstance(config.computeHost, config.intercomHost, passPhrase, db.redisClient);
+      return await blockchain.generateNewZenottaInstance(computeHost, intercomHost, passPhrase, db.redisClient);
 
     }
 
     mkey = JSON.parse(mkey);
     console.log('Mkey found. Initialising blockchain instance');
-    return await blockchain.createZenottaInstance(config.computeHost, config.intercomHost, passPhrase, mkey);
+    return await blockchain.createZenottaInstance(computeHost, intercomHost, passPhrase, mkey);
   })
   .then(async (blInstance) => {
     app.locals.blInstance = blInstance;
     const blClient = app.locals.blInstance.client;
 
-    return await cache.initBalanceCache(db.redisClient, blClient, config.cacheCapacity);
+    return await cache.initBalanceCache(db.redisClient, blClient, cacheCapacity);
   })
   .then(cache => {
 
