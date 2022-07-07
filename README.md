@@ -71,7 +71,7 @@ redis-server --daemonize yes
 
 # In another tab
 npm run build
-node dist/index.js
+npm start YOUR_PASSPHRASE
 ```
 
 You'll need to ensure that `redis-server` runs on port <b>6379</b>.
