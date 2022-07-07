@@ -52,6 +52,9 @@ docker build -t keycard .
 
 ## 🏎️ Running
 
+<br />
+
+### Easy (Docker Compose)
 To use Keycard as is, you can simply run the following in the root folder of the repo:
 
 ```sh
@@ -61,11 +64,26 @@ docker-compose up -d
 Docker will orchestrate the required containers, after which you can make 
 calls to Keycard at port **1337**. Data saved to Keycard's Redis instance is kept within a Docker volume.
 
+### Hard (Manual)
+If you don't want to use Docker you can run the service manually. For this you'll require [Redis](https://redis.io/download/)
+installed on whatever you want to run Keycard on.
+
+```sh
+# In one tab or detached
+redis-server --daemonize yes
+
+# In another tab
+npm run build
+node dist/index.js
+```
+
+You'll need to ensure that `redis-server` runs on port <b>6379</b>.
+
 <br />
 
 ## 💻 Usage
 
-Keycard currently only provides 2 routes for handling blockchain asset creation and sending.
+Keycard currently only provides 3 routes for handling blockchain asset creation and sending.
 
 ### Creating Blockchain Items
 
@@ -74,7 +92,7 @@ Zenotta exactly like blockchain items/NFTs. These can be created by making a cal
 as below:
 
 ```typescript
-// POST
+// POST example with Axios
 axios
   .post("/create_blockchain_item", {
     amount: 1000, // Number of items to create
@@ -120,7 +138,7 @@ In order to send `Receipt` blockchain items you'll need the following:
 With these 3 values you can make a call to Keycard at:
 
 ```typescript
-// POST
+// POST example with Axios
 axios
   .post("/send_blockchain_item", {
     amount: 1000,               // Number of items to send
@@ -139,6 +157,43 @@ axios
     "status": "success",
     "reason": "OK",
     "content": null
+}
+```
+
+<br />
+
+### Fetching Your Balance of Items
+
+You can fetch the remaining balances of all your available blockchain items by querying the following call:
+
+```typescript
+// POST example with Axios
+axios
+  .post("/fetch_item_balances", {
+    refresh: false
+  })
+  .then((response) => {
+    console.log(response);
+  });
+```
+
+The body of the `POST` request contains a `refresh` field that will clear Keycard's cache and re-fetch all 
+available balances from the blockchain directly if set to `true`. Note this will take slightly longer to fetch, 
+especially for a larger number of items.
+
+<b>Example Response Content</b>
+
+```json
+{
+    "status": "success",
+    "reason": "OK",
+    "content": {
+        "balances": [
+            {
+                "g5bd77c8213e12725da1031695a1e49a": 10
+            }
+        ]
+    }
 }
 ```
 
