@@ -74,7 +74,7 @@ npm run build
 npm start YOUR_PASSPHRASE
 ```
 
-You'll need to ensure that `redis-server` runs on port <b>6379</b>.
+You'll need to ensure that `redis-server` runs on port 6379.
 
 <br />
 
