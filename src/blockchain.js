@@ -13,8 +13,6 @@ const db = require('./db');
  * @returns 
  */
 async function generateNewZenottaInstance(computeHost, intercomHost, passPhrase, redisClient) {
-    console.log('passphrase in generate', passPhrase);
-    console.log('passphrase type', typeof passPhrase);
     const blInstance = await createZenottaInstance(computeHost, intercomHost, passPhrase);
     const mKeyResponse = blInstance.client.getMasterKey();
 
@@ -45,8 +43,6 @@ async function createZenottaInstance(computeHost, intercomHost, passPhrase, mast
 
     if (!masterKey) {
         const seedPhrase = zenotta.generateSeedPhrase();
-        console.log('seed phrase', seedPhrase);
-        console.log('seed phrase type', typeof seedPhrase);
         initResult = await client.initFromSeed({
             computeHost,
             intercomHost,
@@ -63,9 +59,6 @@ async function createZenottaInstance(computeHost, intercomHost, passPhrase, mast
             masterKey
         );
     }
-
-    console.log('client', client);
-    console.log('initResult', initResult);
 
     return {
         client,

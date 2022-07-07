@@ -9,7 +9,6 @@ const passPhrase = process.env.PASSPHRASE ? process.env.PASSPHRASE.toString() : 
 const intercomHost = process.env.INTERCOM_HOST ? process.env.INTERCOM_HOST.toString() : "http://0.0.0.0:3000";
 const computeHost = process.env.COMPUTE_HOST ? process.env.COMPUTE_HOST.toString() : "http://34.209.131.212:3001";
 const cacheCapacity = process.env.CACHE_CAPACITY ? parseInt(process.env.CACHE_CAPACITY) : 1000;
-console.log('passphrase', passPhrase);
 
 // ======= Local Imports ======= //
 
