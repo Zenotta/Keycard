@@ -5,6 +5,21 @@ const error = chalk.bold.red;
 const warning = chalk.hex('#FFA500');
 const success = chalk.hex('#00FF00');
 
+class VerboseLogger {
+    constructor(verbose) {
+        this.verbose = verbose;
+    }
+
+    log(context, header, message) {
+        if (this.verbose) {
+            console.log();
+            console.log(`${chalk.green('VERBOSE :: ')}${context}`);
+            console.log(chalk.greenBright(header));
+            console.log(message);
+        }
+    }
+}
+
 function logHeaderInfo(heading, message) {
     const date = new Date();
     
@@ -21,6 +36,12 @@ function logHeaderError(heading, message) {
     console.log(chalk.bold.underline.red(`${utils.getTimestamp()} :: ${heading}`));
     console.log(message);
     console.log();
+}
+
+function verboseLog(verbose, message) {
+    if (verbose) {
+
+    }
 }
 
 function banner() {
@@ -46,6 +67,7 @@ module.exports = {
     success,
     logHeaderInfo,
     logHeaderError,
-    banner
+    banner,
+    VerboseLogger
 }
 

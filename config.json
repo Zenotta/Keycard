@@ -2,5 +2,7 @@
     "passPhrase": "",
     "intercomHost": "http://0.0.0.0:3000",
     "computeHost": "http://34.209.131.212:3001",
-    "cacheCapacity": 1000
+    "cacheCapacity": 1000,
+    "seedPhrase": "rookie canyon protect gadget possible pottery mushroom sweet yard crane notable decline",
+    "verbose": false
 }

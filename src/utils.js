@@ -85,6 +85,7 @@ function getConfigArgs() {
             intercomHost: process.env.INTERCOM_HOST || config.intercomHost,
             computeHost: process.env.COMPUTE_HOST || config.computeHost,
             cacheCapacity: process.env.CACHE_CAPACITY || config.cacheCapacity,
+            verbose: process.env.VERBOSE || config.verbose,
             seedPhrase: process.env.SEED_PHRASE || null
         };
     }
@@ -93,7 +94,9 @@ function getConfigArgs() {
         passPhrase: process.argv[2] || config.passPhrase,
         intercomHost: process.argv[3] || config.intercomHost,
         computeHost: process.argv[4] || config.computeHost,
-        cacheCapacity: process.argv[5] || config.cacheCapacity
+        seedPhrase: process.argv[5] || config.seedPhrase,
+        cacheCapacity: process.argv[6] || config.cacheCapacity,
+        verbose: process.argv[7] || config.verbose
     }
 }
 

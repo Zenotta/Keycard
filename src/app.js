@@ -23,7 +23,8 @@ const {
   passPhrase,
   intercomHost,
   computeHost,
-  cacheCapacity
+  cacheCapacity,
+  verbose
 } = utils.getConfigArgs();
 
 // ======= Server Setup ======= //
@@ -43,6 +44,7 @@ internalLogger.banner();
 
 Promise.resolve(db.init());
 app.locals.db = db.redisClient;
+app.locals.verbose = new internalLogger.VerboseLogger(verbose);
 
 
 // ======= Blockchain ======= //
