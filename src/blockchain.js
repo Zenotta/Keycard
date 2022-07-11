@@ -29,6 +29,31 @@ async function generateNewZenottaInstance(computeHost, intercomHost, passPhrase,
 }
 
 /**
+ * Creates an instance of the Zenotta handler from seed phrase
+ * 
+ * @param {string} computeHost 
+ * @param {string} intercomHost 
+ * @param {string} passPhrase 
+ * @param {string} seedPhrase 
+ * @returns 
+ */
+async function createZenottaInstanceFromSeed(computeHost, intercomHost, passPhrase, seedPhrase) {
+    const client = new zenotta.ZenottaInstance();
+    const initResult = await client.initFromSeed({
+        computeHost,
+        intercomHost,
+        passPhrase,
+    },
+        seedPhrase
+    );
+
+    return {
+        client,
+        initResult
+    };
+}
+
+/**
  * Creates an instance of the Zenotta handler for blockchain integration
  * 
  * @param {string} computeHost - Hostname of the mempool node to use.
@@ -106,5 +131,6 @@ module.exports = {
     createZenottaInstance,
     getNewKeypairEncrypted,
     handleCreateReceiptResp,
+    createZenottaInstanceFromSeed,
     generateNewZenottaInstance
 }

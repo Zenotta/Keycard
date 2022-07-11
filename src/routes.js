@@ -34,10 +34,10 @@ router.post('/create_blockchain_item', async (req, res, _next) => {
 
   const balanceCache = req.app.locals.balanceCache;
   cache.buildCacheEntryFromCreation(balanceCache, receiptInfo.toAddress, receiptInfo);
-  verbose.log(verboseContext, 'Built cache entry', JSON.parse(balanceCache));
+  verbose.log(verboseContext, 'Built cache entry', balanceCache);
 
   db.setDb(db.redisClient, receiptInfo.toAddress, keypair);
-  verbose.log(verboseContext, 'Stored keypair in db', JSON.parse(await db.getDb(db.redisClient, receiptInfo.toAddress)));
+  verbose.log(verboseContext, 'Stored keypair in db', await db.getDb(db.redisClient, receiptInfo.toAddress));
 
   res.send(utils.constructResponse(200, 'OK', receiptInfo));
 });

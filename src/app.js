@@ -24,7 +24,8 @@ const {
   intercomHost,
   computeHost,
   cacheCapacity,
-  verbose
+  verbose,
+  seedPhrase
 } = utils.getConfigArgs();
 
 if (verbose) {
@@ -61,7 +62,10 @@ db.getDb(db.redisClient, 'mkey')
     // If we don't have an existing key
     if (!mkey) {
       console.log(chalk.yellow('No mkey found in db. Generating new blockchain instance'));
-      const result = await blockchain.generateNewZenottaInstance(computeHost, intercomHost, passPhrase, db.redisClient);
+      const result = seedPhrase ? 
+        await blockchain.createZenottaInstanceFromSeed(computeHost, intercomHost, passPhrase, seedPhrase) : 
+        await blockchain.generateNewZenottaInstance(computeHost, intercomHost, passPhrase, db.redisClient);
+
       db.setDb(db.redisClient, 'sp', result.seedPhrase);
 
       return result;
