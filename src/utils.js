@@ -84,7 +84,8 @@ function getConfigArgs() {
             passPhrase: process.env.PASSPHRASE || config.passPhrase,
             intercomHost: process.env.INTERCOM_HOST || config.intercomHost,
             computeHost: process.env.COMPUTE_HOST || config.computeHost,
-            cacheCapacity: process.env.CACHE_CAPACITY || config.cacheCapacity
+            cacheCapacity: process.env.CACHE_CAPACITY || config.cacheCapacity,
+            seedPhrase: process.env.SEED_PHRASE || null
         };
     }
 
@@ -96,11 +97,17 @@ function getConfigArgs() {
     }
 }
 
+function formatSeedPhrase(seedPhrase) {
+    const seedSplit = seedPhrase.split(' ');
+    return seedSplit.map(e => e.replace(/"/g, '')).join(' ');
+}
+
 module.exports = {
     constructResponse: constructResponse,
     errorResponse: errorResponse,
     getAllAddresses: getAllAddresses,
     getTimestamp: getTimestamp,
     getConfigArgs: getConfigArgs,
+    formatSeedPhrase: formatSeedPhrase,
     isValidPaymentAddress: isValidPaymentAddress
 }

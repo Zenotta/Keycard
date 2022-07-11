@@ -59,10 +59,11 @@ PASSPHRASE="MY_SECURE_PASSWORD"
 COMPUTE_HOST="http://COMPUTE_IP:3001"
 INTERCOM_HOST="http://INTERCOM_IP:3000"
 CACHE_CAPACITY=1000
+SEED_PHRASE="YOUR_SEED_PHRASE_IS_OPTIONAL"
 ```
 
 There are also default values for these fields in `config.json`, which Keycard will use if a `.env` file or some of its 
-fields are not provided. You can then run the following:
+fields are not provided. If no seed phrase is provided, Keycard will generate one for you as part of a new instance. You can then run the following:
 
 ```sh
 docker-compose up -d
@@ -91,7 +92,7 @@ You'll need to ensure that `redis-server` runs on port 6379.
 
 ## 💻 Usage
 
-Keycard currently only provides 3 routes for handling blockchain asset creation and sending.
+Keycard currently only provides a number of routes for handling blockchain asset creation and sending.
 
 ### Creating Blockchain Items
 
@@ -203,6 +204,22 @@ especially for a larger number of items.
         ]
     }
 }
+```
+
+<br />
+
+### Getting Your Seed Phrase
+
+If you'd like to retrieve your seed phrase in order to back your instance up or transfer it to a new environment, you 
+can do so at the following route:
+
+```typescript
+// GET example with Axios
+axios
+  .get("/seed_phrase")
+  .then((response) => {
+    console.log(response);
+  })
 ```
 
 <br />

@@ -99,14 +99,16 @@ router.get('/seed_phrase', async (req, res, _next) => {
   if (!client) { res.send(utils.errorResponse(500, "No blockchain instance provided")) }
 
   const seedPhraseResp = client.getSeedPhrase();
+
   if (seedPhraseResp.status != 'success') { 
-    const dbRes = db.getDb(req.app.locals.db, 'sp');
+    const dbRes = await db.getDb(req.app.locals.db, 'sp');
 
     if (!dbRes) {
       res.send(utils.errorResponse(405, "Seed Phrase not found in cache or client"));
     }
 
-    res.send(utils.constructResponse(200, 'OK', { seedPhrase: dbRes }));
+    let seedPhrase = utils.formatSeedPhrase(dbRes);
+    res.send(utils.constructResponse(200, 'OK', { seedPhrase }));
     return;
   }
 
