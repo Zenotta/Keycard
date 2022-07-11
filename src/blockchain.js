@@ -39,10 +39,11 @@ async function generateNewZenottaInstance(computeHost, intercomHost, passPhrase,
  */
 async function createZenottaInstance(computeHost, intercomHost, passPhrase, masterKey) {
     const client = new zenotta.ZenottaInstance();
+    let seedPhrase = null;
     let initResult = null;
 
     if (!masterKey) {
-        const seedPhrase = zenotta.generateSeedPhrase();
+        seedPhrase = zenotta.generateSeedPhrase();
         initResult = await client.initFromSeed({
             computeHost,
             intercomHost,
@@ -62,7 +63,8 @@ async function createZenottaInstance(computeHost, intercomHost, passPhrase, mast
 
     return {
         client,
-        initResult
+        initResult,
+        seedPhrase
     };
 }
 

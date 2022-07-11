@@ -52,8 +52,10 @@ db.getDb(db.redisClient, 'mkey')
     // If we don't have an existing key
     if (!mkey) {
       console.log(chalk.yellow('No mkey found in db. Generating new blockchain instance'));
-      return await blockchain.generateNewZenottaInstance(computeHost, intercomHost, passPhrase, db.redisClient);
+      const result = await blockchain.generateNewZenottaInstance(computeHost, intercomHost, passPhrase, db.redisClient);
+      db.setDb(db.redisClient, 'sp', result.seedPhrase);
 
+      return result;
     }
 
     mkey = JSON.parse(mkey);
