@@ -41,11 +41,8 @@ cd keycard
 # Install dependencies
 npm install
 
-# Bundle server
-npm run build
-
-# Build Docker image
-docker build -t keycard .
+# Bundle server and build Docker image
+npm run build:docker
 ```
 
 <br />
@@ -66,7 +63,7 @@ There are also default values for these fields in `config.json`, which Keycard w
 fields are not provided. If no seed phrase is provided, Keycard will generate one for you as part of a new instance. You can then run the following:
 
 ```sh
-docker-compose up -d
+docker-compose --env-file ./.env up
 ```
 
 Docker will orchestrate the required containers, after which you can make 
