@@ -27,6 +27,14 @@ const {
   verbose
 } = utils.getConfigArgs();
 
+if (verbose) {
+  console.log(chalk.green('Verbose mode enabled'));
+  console.log('passPhrase', passPhrase);
+  console.log('intercomHost', intercomHost);
+  console.log('computeHost', computeHost);
+  console.log('cacheCapacity', cacheCapacity);
+}
+
 // ======= Server Setup ======= //
 
 app.use(cors());
@@ -37,7 +45,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 internalLogger.banner();
-
 
 
 // ======= DB Setup ======= //

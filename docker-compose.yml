@@ -47,6 +47,10 @@ services:
             - INTERCOM_HOST=${INTERCOM_HOST}
             # Cache Capacity
             - CACHE_CAPACITY=${CACHE_CAPACITY}
+            # Verbose
+            - VERBOSE=${VERBOSE}
+            # Seed Phrase
+            - SEED_PHRASE=${SEED_PHRASE}
         container_name: keycard-server
 volumes:
     cache:

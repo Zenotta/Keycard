@@ -80,6 +80,8 @@ function getTimestamp() {
 
 function getConfigArgs() {
     if (process.env.NODE_ENV === 'production') {
+        console.log('Running in production mode');
+
         return {
             passPhrase: process.env.PASSPHRASE || config.passPhrase,
             intercomHost: process.env.INTERCOM_HOST || config.intercomHost,
