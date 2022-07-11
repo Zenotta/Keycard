@@ -1,3 +1,5 @@
+const config = require('../config.json');
+
 /**
  * Generic constructor for consistent response handling
  * 
@@ -76,10 +78,29 @@ function getTimestamp() {
     return time;
 };
 
+function getConfigArgs() {
+    if (process.env.NODE_ENV === 'production') {
+        return {
+            passPhrase: process.env.PASSPHRASE || config.passPhrase,
+            intercomHost: process.env.INTERCOM_HOST || config.intercomHost,
+            computeHost: process.env.COMPUTE_HOST || config.computeHost,
+            cacheCapacity: process.env.CACHE_CAPACITY || config.cacheCapacity
+        };
+    }
+
+    return {
+        passPhrase: process.argv[2] || config.passPhrase,
+        intercomHost: process.argv[3] || config.intercomHost,
+        computeHost: process.argv[4] || config.computeHost,
+        cacheCapacity: process.argv[5] || config.cacheCapacity
+    }
+}
+
 module.exports = {
     constructResponse: constructResponse,
     errorResponse: errorResponse,
     getAllAddresses: getAllAddresses,
     getTimestamp: getTimestamp,
+    getConfigArgs: getConfigArgs,
     isValidPaymentAddress: isValidPaymentAddress
 }

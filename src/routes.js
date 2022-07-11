@@ -40,6 +40,7 @@ router.post('/create_blockchain_item', async (req, res, _next) => {
 router.post('/send_blockchain_item', async (req, res, _next) => {
   const { address, amount, txHash } = req.body;
   const { client } = req.app.locals.blInstance;
+  const redisClient = req.app.locals.db;
   if (!client) { res.send(utils.errorResponse(500, "No blockchain instance provided")) }
 
   // Excess keypair for return
@@ -47,11 +48,12 @@ router.post('/send_blockchain_item', async (req, res, _next) => {
   if (!excessKeypair) { res.send(utils.errorResponse(500, "Couldn't generate excess keypair")) }
 
   // Send the item on-chain
-  const allAddresses = utils.getAllAddresses(req.app.locals.db);
-  const sendReceiptResp = await client.makeReceiptPayment(address, amount, txHash, allAddresses, excessKeypair);
+  const allAddresses = await utils.getAllAddresses(redisClient);
+  const allKeypairs = await db.getAll(redisClient, allAddresses);
+  const sendReceiptResp = await client.makeReceiptPayment(address, amount, txHash, allKeypairs, excessKeypair);
 
   if (sendReceiptResp.status == 'success') {
-    db.setDb(db.redisClient, excessKeypair, excessKeypair);
+    db.setDb(redisClient, excessKeypair.address, excessKeypair);
     res.send(utils.constructResponse(200, 'OK', { message: 'Payment sent' }));
     return;
   }

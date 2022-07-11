@@ -5,11 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const passPhrase = process.env.PASSPHRASE ? process.env.PASSPHRASE.toString() : "";
-const intercomHost = process.env.INTERCOM_HOST ? process.env.INTERCOM_HOST.toString() : "http://0.0.0.0:3000";
-const computeHost = process.env.COMPUTE_HOST ? process.env.COMPUTE_HOST.toString() : "http://34.209.131.212:3001";
-const cacheCapacity = process.env.CACHE_CAPACITY ? parseInt(process.env.CACHE_CAPACITY) : 1000;
-
 // ======= Local Imports ======= //
 
 const db = require('./db');
@@ -21,6 +16,17 @@ const internalLogger = require('./logger');
 const chalk = require('chalk');
 
 const app = express();
+
+// ======= Config ======= //
+
+const {
+  passPhrase,
+  intercomHost,
+  computeHost,
+  cacheCapacity
+} = utils.getConfigArgs();
+
+// ======= Server Setup ======= //
 
 app.use(cors());
 app.use(logger('dev'));

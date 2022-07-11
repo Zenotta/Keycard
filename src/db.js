@@ -45,9 +45,20 @@ const getDb = async (redisClient, key) => {
     return value;
 };
 
+const getAll = async (redisClient, keys) => {
+    let values = [];
+
+    for (let key of keys) {
+        values.push(JSON.parse(await getDb(redisClient, key)));
+    }
+
+    return values;
+}
+
 module.exports = {
     init,
     setDb,
     getDb,
+    getAll,
     redisClient,
 }

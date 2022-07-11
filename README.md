@@ -51,7 +51,18 @@ docker build -t keycard .
 <br />
 
 ## 🏎️ Running
-To use Keycard as is, you can simply run the following in the root folder of the repo:
+To use Keycard with Docker, you can set up a local `.env` file in the project root, with your configuration options 
+like below:
+
+```sh
+PASSPHRASE="MY_SECURE_PASSWORD"
+COMPUTE_HOST="http://COMPUTE_IP:3001"
+INTERCOM_HOST="http://INTERCOM_IP:3000"
+CACHE_CAPACITY=1000
+```
+
+There are also default values for these fields in `config.json`, which Keycard will use if a `.env` file or some of its 
+fields are not provided. You can then run the following:
 
 ```sh
 docker-compose up -d
