@@ -16,12 +16,12 @@ router.get('/', (_req, res, _next) => {
 router.post('/create_blockchain_item', async (req, res, _next) => {
   const { amount } = req.body;
   const { client } = req.app.locals.blInstance;
-  const { verbose } = req.app.locals;
+  const { verbose, balanceCache } = req.app.locals;
   const verboseContext = '/create_blockchain_item';
   if (!client) { res.send(utils.errorResponse(500, "No blockchain instance provided")) }
   
   // Keypair for the new item
-  const keypair = blockchain.getNewKeypairEncrypted(client);
+  const keypair = blockchain.getNewKeypairEncrypted(client, balanceCache);
   verbose.log(verboseContext, 'Generated new keypair', keypair);
   if (!keypair) { res.send(utils.errorResponse(500, "Couldn't generate keypair")) }
   
@@ -32,12 +32,11 @@ router.post('/create_blockchain_item', async (req, res, _next) => {
   const receiptInfo = blockchain.handleCreateReceiptResp(createReceiptResp);
   verbose.log(verboseContext, 'Handled create receipt response', receiptInfo);
 
-  const balanceCache = req.app.locals.balanceCache;
-  cache.buildCacheEntryFromCreation(balanceCache, receiptInfo.toAddress, receiptInfo);
-  verbose.log(verboseContext, 'Built cache entry', balanceCache);
-
   db.setDb(db.redisClient, receiptInfo.toAddress, keypair);
   verbose.log(verboseContext, 'Stored keypair in db', await db.getDb(db.redisClient, receiptInfo.toAddress));
+  
+  cache.buildCacheEntryFromCreation(balanceCache, receiptInfo.toAddress, receiptInfo);
+  verbose.log(verboseContext, 'Built cache entry', balanceCache);
 
   res.send(utils.constructResponse(200, 'OK', receiptInfo));
 });
@@ -48,12 +47,12 @@ router.post('/send_blockchain_item', async (req, res, _next) => {
   const { address, amount, txHash } = req.body;
   const { client } = req.app.locals.blInstance;
   const redisClient = req.app.locals.db;
-  const { verbose } = req.app.locals;
+  const { verbose, balanceCache } = req.app.locals;
   const verboseContext = '/send_blockchain_item';
   if (!client) { res.send(utils.errorResponse(500, "No blockchain instance provided")) }
 
   // Excess keypair for return
-  const excessKeypair = blockchain.getNewKeypairEncrypted(client);
+  const excessKeypair = blockchain.getNewKeypairEncrypted(client, balanceCache);
   if (!excessKeypair) { res.send(utils.errorResponse(500, "Couldn't generate excess keypair")) }
 
   const allAddresses = await utils.getAllAddresses(redisClient);
@@ -138,6 +137,7 @@ router.get('/seed_phrase', async (req, res, _next) => {
 
   if (seedPhraseResp.status != 'success') { 
     const dbRes = await db.getDb(req.app.locals.db, 'sp');
+    console.log('dbRes', dbRes);
     verbose.log(verboseContext, 'Seed Phrase Retrieval from Redis Db', dbRes);
 
     if (!dbRes) {

@@ -37,7 +37,7 @@ async function generateNewZenottaInstance(computeHost, intercomHost, passPhrase,
  * @param {string} seedPhrase 
  * @returns 
  */
-async function createZenottaInstanceFromSeed(computeHost, intercomHost, passPhrase, seedPhrase) {
+async function createZenottaInstanceFromSeed(computeHost, intercomHost, passPhrase, redisClient, seedPhrase) {
     const client = new zenotta.ZenottaInstance();
     const initResult = await client.initFromSeed({
         computeHost,
@@ -46,7 +46,8 @@ async function createZenottaInstanceFromSeed(computeHost, intercomHost, passPhra
     },
         seedPhrase
     );
-
+    
+    db.setDb(redisClient, 'mkey', client.getMasterKey().content.getMasterKeyResponse);
     return {
         client,
         initResult
@@ -99,8 +100,8 @@ async function createZenottaInstance(computeHost, intercomHost, passPhrase, mast
  * @param {*} client
  * @returns 
  */
-function getNewKeypairEncrypted(client) {
-    const keypairResp = client.getNewKeypair([]);
+function getNewKeypairEncrypted(client, cache) {
+    const keypairResp = client.getNewKeypair(Object.keys(cache.lookup));
 
     if (keypairResp && keypairResp.status == 'success') {
         return keypairResp.content.newKeypairResponse;
